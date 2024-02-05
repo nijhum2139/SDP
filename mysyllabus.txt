@@ -1,4 +1,2 @@
 ISD
-SDP
 CA
-SPL
