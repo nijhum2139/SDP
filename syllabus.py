@@ -43,7 +43,11 @@ pause_button.pack(pady=10)
 reset_button = tb.Button(pomodoro_frame,text="RESET",style="warning.Outline.TButton",state="disabled") #button to reset timer
 reset_button.pack(pady=10)
 
-
+timer_start = None
+timer_end = None
+timer_running = False
+timer_mode = "pomodoro"
+pomodoro_count = 0
 
 
 
