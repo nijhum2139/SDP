@@ -44,6 +44,24 @@ reset_button = tb.Button(pomodoro_frame,text="RESET",style="warning.Outline.TBut
 reset_button.pack(pady=10)
 
 
+#function for starting timer
+def start_timer():
+    global timer_start, timer_end, timer_running, timer_mode
+    if not timer_running: #if the timer is not running
+        timer_start = datetime.now() #store the start time
+        if timer_mode == "pomodoro": #if timer is already started
+            timer_end = timer_start + timedelta(minutes=POMODORO_TIME) #The timer will stop after this time
+            status_var.set(f"Pomodoro session {pomodoro_count +1} running!") #showing status
+        elif timer_mode == "break": #if it is a break time
+            timer_end = timer_start + timedelta(minutes=BREAK_TIME)  # The timer will stop after this time
+            status_var.set(f"TIme to take a break!")  # showing status
+        elif timer_mode == "long break": #after 4 sessions
+            timer_end = timer_start + timedelta(minutes=LONG_BREAK_TIME)  # The timer will stop after this time
+            status_var.set(f" You have earned a long break!")  # showing status
+        timer_running = True #timer has started
+        start_button["state"] = "disabled" #start button is unoperatable
+        pause_button["state"] = "normal" #pause button now operational
+        reset_button["state"] = "normal" #reset button now operational
 
 
 
