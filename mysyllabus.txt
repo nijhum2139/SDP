@@ -1,4 +1,3 @@
 ISD
-SDP
 CA
-SPL
+SE
