@@ -4,6 +4,7 @@ import ttkbootstrap as tb
 from ttkbootstrap.constants import *
 from ttkbootstrap import Style
 from datetime import datetime, timedelta
+import json
 
 
 
@@ -140,6 +141,26 @@ reset_button["command"] = reset_timer
 
 #calling the update timer function
 update_timer()
+
+
+
+#goal setter
+GOAL_FILE = "goals.json" #to store the goals
+DATE_FORMAT = "%Y-%m-%d" #date format for goals
+
+
+goal_label = tb.Label(text="Goals to Go", font=("Helvetica",20),bootstyle = "success")
+goal_label.pack()
+#goal frame
+goal_frame = tb.Frame(root) #goal frame inside the main window
+goal_frame.pack(fill="both", expand=True)
+
+#create goal list
+goal_list = tk.Listbox(goal_frame,height = 10)
+goal_list.pack(side="left",fill="both",expand= True)
+
+
+
 
 
 
