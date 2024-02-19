@@ -115,6 +115,32 @@ def pause_timer():
         reset_button["state"] = "normal" # enable the reset button
         status_var.set("Paused") # update the status
 
+def reset_timer():
+    global timer_start,timer_end,timer_running,timer_mode
+    timer_running = False #timer stops
+    #button states
+    start_button["state"] = "normal"
+    pause_button["state"] = "disabled"
+    reset_button["state"] = "disabled" #can use only the start button not anything else
+    if timer_mode == "pomodoro": #if timer is running
+        time_var.set(f"{POMODORO_TIME}:00") #set the running time
+        status_var.set(f"Ready to study") #update status
+    elif timer_mode == "break": #if it is a break time
+        time_var.set(f"{BREAK_TIME}:00") #set the break time
+        status_var.set(f"Pomodoro {pomodoro_count} completed") #shows how many sessions are completed
+    elif timer_mode == "long break":
+        time_var.set(f"{LONG_BREAK_TIME}:00")  # set the long break time
+        status_var.set(f"Pomodoro {pomodoro_count} completed")  # shows how many sessions are completed
+
+
+#button binding
+start_button["command"] = start_timer
+pause_button["command"] = pause_timer
+reset_button["command"] = reset_timer
+
+#calling the update timer function
+update_timer()
+
 
 
 
