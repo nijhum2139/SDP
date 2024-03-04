@@ -13,10 +13,13 @@ root = tb.Window(themename="cyborg")
 root.title("Syllabus")
 root.geometry("700x800")
 
+#section1
+frame1 = tb.Frame(root)
+frame1.pack(side='top',fill='x')
 
 #pomodoro frame
-pomodoro_frame = tb.Frame(root) #frame for pomodoro
-pomodoro_frame.pack(fill="both", expand=True)
+pomodoro_frame = tb.Frame(frame1, bootstyle="primary", width=450) #frame for pomodoro
+pomodoro_frame.pack(fill="both", expand=True,  padx = 10, pady=10, side='left')
 
 #constants for pomodoro timer
 POMODORO_TIME = 25 #time for one session
@@ -143,70 +146,86 @@ reset_button["command"] = reset_timer
 update_timer()
 
 
+# Define some constants
+GOAL_FILE = "goals.json" # file name to store the goals
+HISTORY_FILE = "history.json" #file for storing history
+DATE_FORMAT = "%Y-%m-%d" # date format to display and parse
 
-#goal setter
-GOAL_FILE = "goals.json" #to store the goals
-DATE_FORMAT = "%Y-%m-%d" #date format for goals
+#goalframe
+goalframe = tb.Frame(frame1,width=250)
+goalframe.pack(side="right",padx = 10, pady=10,expand=True)
 
+# Create the goal listbox
+goal_list = tk.Listbox(goalframe, height=300)
+goal_list.pack(fill="both", expand=True)
 
-goal_label = tb.Label(text="Goals to Go", font=("Helvetica",20),bootstyle = "success")
-goal_label.pack()
-#goal frame
-goal_frame = tb.Frame(root) #goal frame inside the main window
-goal_frame.pack(fill="both", expand=True)
+# Create the scrollbar for the goal listbox
+goal_scroll = tb.Scrollbar(goal_list, orient="vertical", command=goal_list.yview)
+goal_scroll.pack(side="right", fill="y")
+goal_list["yscrollcommand"] = goal_scroll.set
 
-#create goal list
-goal_list = tk.Listbox(goal_frame,height = 10)
-goal_list.pack(side="left",fill="both",expand= True)
+# Create the frame to hold the goal entry and buttons
+goal_entry_frame = tb.Frame(goalframe)
+goal_entry_frame.pack(side="bottom", fill="x")
 
+# Create the goal entry
+goal_var = tk.StringVar() # variable to store the goal value
+goal_entry = tk.Entry(goal_entry_frame, textvariable=goal_var)
+goal_entry.pack(side="left", fill="x", expand=True)
 
+# Create the date entry
+date_var = tk.StringVar() # variable to store the date value
+date_entry = tk.Entry(goal_entry_frame, textvariable=date_var)
+date_entry.pack(side="left", fill="x", expand=True)
 
+#goal buttons frame
+goal_button_frame = tb.Frame(goalframe)
+goal_button_frame.pack(side="top")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def add_syllabus():
-    f = open("mysyllabus.txt","a")
-    f.write(f"{sub_text.get()}\n")
-    f.close()
-    f = open("mysyllabus.txt", "r")
-    my_label.config(text=f.read())
-    f.close()
-
-
-
-
-subject = tb.Label(text="Subject name: ", font=("Helvetica",20), bootstyle = SUCCESS)
-subject.pack(padx=10,pady=20)
-
-sub_text = tb.Entry()
-sub_text.pack(padx=20)
-
-topic = tb.Label(text="Number of topics: ", font=("Helvetica",20), bootstyle = "warning")
-topic.pack(padx=10,pady=20)
-
-topic_text = tb.Entry()
-topic_text.pack(padx=20)
-
-add_button = tb.Button(text="ADD", bootstyle=SUCCESS, command=add_syllabus)
-add_button.pack(pady=30)
+# Create the add, edit, delete, and history buttons
+add_button = tb.Button(goal_button_frame, text="Add", style="success.Outline.TButton")
+add_button.pack(side="left", padx=5, pady=5)
+edit_button = tb.Button(goal_button_frame, text="Edit", style="primary.Outline.TButton")
+edit_button.pack(side="left", padx=5, pady=5)
+delete_button = tb.Button(goal_button_frame, text="Delete", style="danger.Outline.TButton")
+delete_button.pack(side="left", padx=5, pady=5)
+history_button = tb.Button(goal_button_frame, text="History", style="info.Outline.TButton")
+history_button.pack(side="left", padx=5, pady=5)
 
 
-f = open("mysyllabus.txt","r")
-my_label = tb.Label(text=f.read(), font=("Helvetica",20))
-my_label.pack(pady=20)
-f.close()
+
+
+
+# def add_syllabus():
+#     f = open("mysyllabus.txt","a")
+#     f.write(f"{sub_text.get()}\n")
+#     f.close()
+#     f = open("mysyllabus.txt", "r")
+#     my_label.config(text=f.read())
+#     f.close()
+#
+#
+#
+#
+# subject = tb.Label(text="Subject name: ", font=("Helvetica",20), bootstyle = SUCCESS)
+# subject.pack(padx=10,pady=20)
+#
+# sub_text = tb.Entry()
+# sub_text.pack(padx=20)
+#
+# topic = tb.Label(text="Number of topics: ", font=("Helvetica",20), bootstyle = "warning")
+# topic.pack(padx=10,pady=20)
+#
+# topic_text = tb.Entry()
+# topic_text.pack(padx=20)
+#
+# add_button = tb.Button(text="ADD", bootstyle=SUCCESS, command=add_syllabus)
+# add_button.pack(pady=30)
+#
+#
+# f = open("mysyllabus.txt","r")
+# my_label = tb.Label(text=f.read(), font=("Helvetica",20))
+# my_label.pack(pady=20)
+# f.close()
 
 root.mainloop()
