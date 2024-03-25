@@ -1,13 +1,9 @@
 import tkinter as tk
-from tkinter import *
 import ttkbootstrap as tb
-from ttkbootstrap.constants import *
-from ttkbootstrap import Style
-from datetime import datetime, timedelta
+from datetime import datetime
 import json
 
 from ttkbootstrap.dialogs import Messagebox
-import main
 from main import frame1, root
 
 
@@ -193,3 +189,4 @@ goal_list.bind("<Double-Button-1>", lambda x: complete_goal())
 
 # Bind the function to add a goal to the return key event on the entry
 goal_entry.bind("<Return>", lambda x: add_goal())
+

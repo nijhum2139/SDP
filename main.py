@@ -1,12 +1,4 @@
-import tkinter as tk
-from tkinter import *
 import ttkbootstrap as tb
-from ttkbootstrap.constants import *
-from ttkbootstrap import Style
-from datetime import datetime, timedelta
-import json
-
-from ttkbootstrap.dialogs import Messagebox
 
 
 #main window

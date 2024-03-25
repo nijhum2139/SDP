@@ -1,12 +1,9 @@
-import tkinter as tk
 from tkinter import ttk, simpledialog
-from ttkbootstrap import Style
 from datetime import datetime
+from main import frame2,root
 
-from main import frame2
-
-tree = ttk.Treeview(frame2, columns=("Topic", "Status", "Completion Date"), show="headings", selectmode="browse")
-tree.heading("Task", text="Task")
+tree = ttk.Treeview(frame2, columns=("Task", "Status", "Completion Date"), show="headings", selectmode="browse")
+tree.heading("Task", text="Topic")
 tree.heading("Status", text="Status")
 
 tree.heading("Completion Date", text="Completion Date")
@@ -105,5 +102,6 @@ mark_completed_button["command"] = mark_completed
 
 load_tasks()
 update_treeview()
+root.mainloop()
 
 
