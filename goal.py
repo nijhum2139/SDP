@@ -193,3 +193,4 @@ goal_list.bind("<Double-Button-1>", lambda x: complete_goal())
 
 # Bind the function to add a goal to the return key event on the entry
 goal_entry.bind("<Return>", lambda x: add_goal())
+

@@ -5,7 +5,7 @@ from ttkbootstrap.constants import *
 from ttkbootstrap import Style
 from datetime import datetime, timedelta
 import json
-
+import datetime
 from ttkbootstrap.dialogs import Messagebox
 import main
 from main import frame1, root
@@ -47,38 +47,57 @@ timer_running = False
 timer_mode = "pomodoro"
 pomodoro_count = 0
 
-def update_timer():
-    global timer_start, timer_end, timer_running, timer_mode, pomodoro_count
-    if timer_running: # if the timer is running
-        now = datetime.now() #registers presents time
-        if now >= timer_end: #the time is over
-            timer_running = False # the timer stops
-            start_button["state"] = "normal"
-            pause_button["state"] = "disabled"
-            reset_button["state"] = "disabled" #only start button is operational
-            if timer_mode == "pomodoro": # session on going
+
+
+def check_timer_status():
+    global timer_running, timer_end, timer_mode, pomodoro_count
+    if timer_running:
+        now = datetime.datetime.now()
+        if now >= timer_end:
+            timer_running = False
+            if timer_mode == "pomodoro":
                 pomodoro_count += 1
-                status_var.set(f"Pomodoro {pomodoro_count} completed")
-                if pomodoro_count % POMODORO_SESSION == 0: # checking if it is break or long break
-                    timer_mode = "long break"
-                    time_var.set(f"{LONG_BREAK_TIME}:00")
-                else:
-                    timer_mode = "break"
-                    time_var.set(f"{BREAK_TIME}:00")
-            elif timer_mode == "break": # if it was a break
-                status_var.set("Break completed")
-                timer_mode = "pomodoro"
-                time_var.set(f"{BREAK_TIME}:00")
-            elif timer_mode == "long break": # if it was a long break
-                status_var.set("Long break completed")
-                timer_mode = "pomodoro"
-                time_var.set(f"{LONG_BREAK_TIME}:00")
+                update_pomodoro_status()
+            else:
+                update_break_status()
         else:
-            remaining = timer_end - now
-            minutes = remaining.seconds // 60
-            seconds = remaining.seconds % 60
-            time_var.set(f"{minutes:02}:{seconds:02}")
-    root.after(1000, update_timer)
+            update_remaining_time(now)
+    root.after(1000, check_timer_status)
+
+
+def update_pomodoro_status():
+    global timer_mode
+    start_button["state"] = "normal"
+    pause_button["state"] = "disabled"
+    reset_button["state"] = "disabled"
+    status_var.set(f"Pomodoro {pomodoro_count} completed")
+    if pomodoro_count % POMODORO_SESSION == 0:
+        timer_mode = "long break"
+        time_var.set(f"{LONG_BREAK_TIME}:00")
+    else:
+        timer_mode = "break"
+        time_var.set(f"{BREAK_TIME}:00")
+
+
+def update_break_status():
+    global timer_mode
+    start_button["state"] = "normal"
+    pause_button["state"] = "disabled"
+    reset_button["state"] = "disabled"
+    if timer_mode == "break":
+        status_var.set("Break completed")
+    elif timer_mode == "long break":
+        status_var.set("Long break completed")
+    timer_mode = "pomodoro"
+    time_var.set(f"{BREAK_TIME}:00")
+
+
+def update_remaining_time(now):
+    global timer_end
+    remaining = timer_end - now
+    minutes = remaining.seconds // 60
+    seconds = remaining.seconds % 60
+    time_var.set(f"{minutes:02}:{seconds:02}")
 
 #function for starting timer
 def start_timer():
