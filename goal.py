@@ -2,16 +2,13 @@ import tkinter as tk
 import ttkbootstrap as tb
 from datetime import datetime
 import json
-
 from ttkbootstrap.dialogs import Messagebox
 from main import frame1, root
 
-
-
 # Define some constants
-GOAL_FILE = "goals.json" # file name to store the goals
-HISTORY_FILE = "history.json" #file for storing history
-DATE_FORMAT = "%Y-%m-%d" # date format to display and parse
+GOAL_FILE = "goals.json"
+HISTORY_FILE = "history.json"
+DATE_FORMAT = "%Y-%m-%d"
 
 #goalframe
 goalframe = tb.Frame(frame1,width=350)
@@ -31,12 +28,12 @@ goal_entry_frame = tb.Frame(goalframe)
 goal_entry_frame.pack(side="bottom", fill="x")
 
 # Create the goal entry
-goal_var = tk.StringVar() # variable to store the goal value
+goal_var = tk.StringVar()
 goal_entry = tk.Entry(goal_entry_frame, textvariable=goal_var)
 goal_entry.pack(side="left", fill="x", expand=True)
 
 # Create the date entry
-date_var = tk.StringVar() # variable to store the date value
+date_var = tk.StringVar()
 date_entry = tk.Entry(goal_entry_frame, textvariable=date_var)
 date_entry.pack(side="left", fill="x", expand=True)
 
@@ -54,129 +51,129 @@ delete_button.pack(side="left", padx=5, pady=5)
 history_button = tb.Button(goal_button_frame, text="History", style="info.Outline.TButton")
 history_button.pack(side="left", padx=5, pady=5)
 
-# Create the variables to store the goals and history
-goals = [] # a list of goals
-history = [] # a list of completed goals
+goals = []
+history = []
 
 # Define the function to load the goals from the file
 def load_goals():
-    global goals
-    try: # try to open the file
-        with open(GOAL_FILE, "r") as f: # open the file in read mode
-            goals = json.load(f) # load the goals as a list
-    except: # if the file does not exist or is corrupted
-        goals = [] # set the goals to an empty list
+    global goals,GOAL_FILE
+    try:
+        with open(GOAL_FILE, "r") as f:
+            goals = json.load(f)
+    except:
+        goals = []
 
 # Define the function to save the goals to the file
 def save_goals():
     global goals
-    try: # try to open the file
-        with open(GOAL_FILE, "w") as f: # open the file in write mode
-            json.dump(goals, f) # dump the goals as a list
-    except: # if the file cannot be opened or written
-        pass # do nothing
+    try:
+        with open(GOAL_FILE, "w") as f:
+            json.dump(goals, f)
+    except:
+        pass
 
 # Define the function to update the goal listbox
-def update_goal_list():
-    global goals
-    goal_list.delete(0, "end") # delete all the items in the listbox
-    for goal in goals: # for each goal in the goals list
-        goal_list.insert("end", f"{goal['name']} - {goal['date']}") # insert the goal to the listbox
+def update_goal_list(goals, goal_list):
+    # global goals
+    goal_list.delete(0, "end")
+    for goal in goals:
+        goal_list.insert("end", f"{goal['name']} - {goal['date']}")
 
 # Define the function to add a goal
 def add_goal():
     global goals,date
-    goal = goal_var.get() # get the goal value from the entry
-    date = date_var.get() # get the date value from the entry
-    if goal and date: # if the goal and date are not empty
-        try: # try to parse the date
-            date_obj = datetime.strptime(date, DATE_FORMAT) # parse the date as a datetime object
-            date_str = date_obj.strftime(DATE_FORMAT) # format the date as a string
-            goals.append({"name": goal, "date": date_str}) # append the goal to the goals list
-            save_goals() # save the goals to the file
-            update_goal_list() # update the goal listbox
-            goal_var.set("") # clear the goal entry
-            date_var.set("") # clear the date entry
-            goal_entry.focus() # focus on the goal entry
-        except: # if the date is invalid
-            Messagebox.show_error("Invalid date format. Please use YYYY-MM-DD.", "Error") # show an error message
+    goal = goal_var.get()
+    date = date_var.get()
+    if goal and date:
+        try:
+            date_obj = datetime.strptime(date, DATE_FORMAT)
+            date_str = date_obj.strftime(DATE_FORMAT)
+            goals.append({"name": goal, "date": date_str})
+            save_goals()
+            update_goal_list(goals, goal_list)
+            goal_var.set("")
+            date_var.set("")
+            goal_entry.focus()
+        except:
+            Messagebox.show_error("Invalid date format. Please use YYYY-MM-DD.", "Error")
 
 # Define the function to edit a goal
 def edit_goal():
     global goals,date
-    goal = goal_var.get() # get the goal value from the entry
-    date = date_var.get() # get the date value from the entry
-    index = goal_list.curselection() # get the index of the selected item in the listbox
-    if goal and date and index: # if the goal, date, and index are not empty
-        try: # try to parse the date
-            date_obj = datetime.strptime(date, DATE_FORMAT) # parse the date as a datetime object
-            date_str = date_obj.strftime(DATE_FORMAT) # format the date as a string
-            goals[index[0]] = {"name": goal, "date": date_str} # update the goal in the goals list
-            save_goals() # save the goals to the file
-            update_goal_list() # update the goal listbox
-            goal_var.set("") # clear the goal entry
-            date_var.set("") # clear the date entry
-            goal_entry.focus() # focus on the goal entry
-        except: # if the date is invalid
-            Messagebox.show_error("Invalid date format. Please use YYYY-MM-DD.", "Error") # show an error message
+    goal = goal_var.get()
+    date = date_var.get()
+    index = goal_list.curselection()
+    if goal and date and index:
+        try:
+            date_obj = datetime.strptime(date, DATE_FORMAT)
+            date_str = date_obj.strftime(DATE_FORMAT)
+            goals[index[0]] = {"name": goal, "date": date_str}
+            save_goals()
+            update_goal_list(goals, goal_list)
+            goal_var.set("")
+            date_var.set("")
+            goal_entry.focus()
+        except:
+            Messagebox.show_error("Invalid date format. Please use YYYY-MM-DD.", "Error")
 
 # Define the function to delete a goal
 def delete_goal():
     global goals
-    index = goal_list.curselection() # get the index of the selected item in the listbox
-    if index: # if an item is selected
-        goals.pop(index[0]) # remove the goal from the goals list
-        save_goals() # save the goals to the file
-        update_goal_list() # update the goal listbox
-        goal_var.set("") # clear the goal entry
-        date_var.set("") # clear the date entry
-        goal_entry.focus() # focus on the goal entry
+    index = goal_list.curselection()
+    if index:
+        goals.pop(index[0])
+        save_goals()
+        update_goal_list(goals, goal_list)
+        goal_var.set("")
+        date_var.set("")
+        goal_entry.focus()
 
 # Define the function to save the history to the file
 def save_history():
     global history
-    try: # try to open the file
-        with open(HISTORY_FILE, "w") as f: # open the file in write mode
-            json.dump(history, f) # dump the goals as a list
-    except: # if the file cannot be opened or written
-        pass # do nothing
+    try:
+        with open(HISTORY_FILE, "w") as f:
+            json.dump(history, f)
+    except:
+        pass
 
 # Define the function to load the goals from the file
 def load_history():
     global history
-    try: # try to open the file
-        with open(HISTORY_FILE, "r") as f: # open the file in read mode
-            history = json.load(f) # load the goals as a list
-    except: # if the file does not exist or is corrupted
-        history = [] # set the goals to an empty list
+    try:
+        with open(HISTORY_FILE, "r") as f:
+            history = json.load(f)
+    except:
+        history = []
 
 # Define the function to mark a goal as completed
 def complete_goal():
     global goals, history
-    index = goal_list.curselection() # get the index of the selected item in the listbox
-    if index: # if an item is selected
-        goal = goals.pop(index[0]) # remove the goal from the goals list
-        history.append(goal) # append the goal to the history list
-        save_history() #save the history
-        save_goals() # save the goals to the file
-        update_goal_list() # update the goal listbox
-        goal_var.set("") # clear the goal entry
-        date_var.set("") # clear the date entry
-        goal_entry.focus() # focus on the goal entry
+    index = goal_list.curselection()
+    if index:
+        goal = goals.pop(index[0])
+        history.append(goal)
+        save_history()
+        save_goals()
+        update_goal_list(goals, goal_list)
+        goal_var.set("")
+        date_var.set("")
+        goal_entry.focus()
 
 # Define the function to show the history of completed goals
 def show_history():
     global history
-    history_window = tk.Toplevel(root) # create a new window
-    history_window.title("Goal History") # set the window title
-    history_window.geometry("300x200") # set the window size
-    history_list = tk.Listbox(history_window, height=10) # create a listbox to show the history
-    history_list.pack(side="left", fill="both", expand=True) # pack the listbox
-    history_scroll = tk.Scrollbar(history_window, orient="vertical", command=history_list.yview) # create a scrollbar for the listbox
-    history_scroll.pack(side="right", fill="y") # pack the scrollbar
-    history_list["yscrollcommand"] = history_scroll.set # link the listbox and the scrollbar
-    for goal in history: # for each goal in the history list
-        history_list.insert("end", f"{goal['name']} - {goal['date']}") # insert the goal to the listbox
+    load_history()
+    history_window = tk.Toplevel(root)
+    history_window.title("Goal History")
+    history_window.geometry("300x200")
+    history_list = tk.Listbox(history_window, height=10)
+    history_list.pack(side="left", fill="both", expand=True)
+    history_scroll = tk.Scrollbar(history_window, orient="vertical", command=history_list.yview)
+    history_scroll.pack(side="right", fill="y")
+    history_list["yscrollcommand"] = history_scroll.set
+    for goal in history:
+        history_list.insert("end", f"{goal['name']} - {goal['date']}")
 
 # Bind the functions to the buttons
 add_button["command"] = add_goal

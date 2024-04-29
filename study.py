@@ -1,15 +1,10 @@
 import goal
 import pomodoro
-from syllabus import load_tasks, update_treeview
 from main import root
-
+import syllabus
 
 pomodoro.check_timer_status()
-pomodoro.update_pomodoro_status()
-pomodoro.update_break_status()
-pomodoro.update_remaining_time()
 goal.load_goals()
-load_tasks()
-update_treeview()
-
+syllabus.load_tasks()
+syllabus.update_treeview()
 root.mainloop()

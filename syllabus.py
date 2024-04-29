@@ -28,13 +28,15 @@ progress_label = ttk.Label(frame2, text="Progress: 0%")
 progress_label.grid(row=2, column=0, pady=5, columnspan=4)
 
 tasks = {}
+TASK_FILE = "tasks.txt"
 
 def add_task():
     task_name = simpledialog.askstring("Input", "Enter task name:")
     if task_name:
         tasks[task_name] = {"status": "Incomplete", "completion_date": None}
         update_treeview()
-        save_tasks()
+        save_tasks(TASK_FILE,tasks)
+
 
 def delete_task():
     selected_item = tree.selection()
@@ -42,7 +44,8 @@ def delete_task():
         task_name = tree.item(selected_item, "values")[0]
         del tasks[task_name]
         update_treeview()
-        save_tasks()
+        save_tasks(TASK_FILE,tasks)
+
 
 def edit_task():
     selected_item = tree.selection()
@@ -52,7 +55,8 @@ def edit_task():
         if edited_name and edited_name != task_name:
             tasks[edited_name] = tasks.pop(task_name)
             update_treeview()
-            save_tasks()
+            save_tasks(TASK_FILE,tasks)
+
 
 def mark_completed():
     selected_item = tree.selection()
@@ -61,7 +65,8 @@ def mark_completed():
         tasks[task_name]["status"] = "Completed"
         tasks[task_name]["completion_date"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         update_treeview()
-        save_tasks()
+        save_tasks(TASK_FILE,tasks)
+
 
 def update_treeview():
     tree.delete(*tree.get_children())
@@ -70,8 +75,9 @@ def update_treeview():
         task_completion_status = details["status"]
         completion_date = details["completion_date"] if details["completion_date"] else ""
         tree.insert("", "end", values=(task, task_completion_status, completion_date))
-    save_tasks()
+    save_tasks(TASK_FILE,tasks)
     calculate_progress()
+
 
 def calculate_progress():
     total_tasks = len(tasks)
@@ -79,8 +85,9 @@ def calculate_progress():
     progress_percentage = 0 if total_tasks == 0 else (completed_tasks / total_tasks) * 100
     progress_label["text"] = f"Progress: {progress_percentage:.2f}%"
 
-def save_tasks():
-    with open("tasks.txt", "w") as file:
+
+def save_tasks(TASK_FILE,tasks):
+    with open(TASK_FILE, "w") as file:
         for task, details in tasks.items():
             file.write(f"{task}::{details['status']}::{details['completion_date']}::\n")
 
@@ -95,6 +102,7 @@ def load_tasks():
     except FileNotFoundError:
         pass
 
+
 add_task_button["command"] = add_task
 delete_task_button["command"] = delete_task
 edit_task_button["command"] = edit_task
@@ -103,5 +111,3 @@ mark_completed_button["command"] = mark_completed
 load_tasks()
 update_treeview()
 root.mainloop()
-
-
